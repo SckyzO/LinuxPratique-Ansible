@@ -1,0 +1,45 @@
+---
+- name: Update & upgrade system
+  apt:
+    update_cache: yes
+    upgrade: dist
+
+- name: Install required packages 
+  apt:
+    name: 
+    - fail2ban
+    - htop
+    - vim
+    - man 
+    - manpages-fr 
+    - manpages-fr-extra 
+    - manpages-fr-dev 
+    - bash-completion 
+    - locales 
+    - python-pip 
+    - wget 
+    - zip 
+    - bzip2 
+    - lsof 
+    - sudo 
+    - tree 
+    - ccze 
+    - vim-common 
+    - screen 
+    - curl 
+    - git 
+    - unzip
+
+- name: Upload fail2ban config file
+  template:
+    src: fail2ban.conf.j2
+    dest: /etc/fail2ban/jail.d/defaults-debian.conf
+    mode: 0644
+
+- name: Remove useless stuff
+  apt:
+    name: 
+      - bind9
+      - telnet
+      - ftp
+    state: absent

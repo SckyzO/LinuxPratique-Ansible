@@ -1,0 +1,48 @@
+---
+
+- name: Install apache
+  apt:
+    name: apache2
+    update_cache: yes
+    
+- name: Remove other_vhosts_access.log file
+  file:
+    path: /var/log/apache2/other_vhosts_access.log
+    state: absent
+
+- name: Set ServerToken & ServerSignature for prod
+  replace:
+    dest: /etc/apache2/conf-available/security.conf
+    regexp: "{{ item.regexp }}"
+    replace: "{{ item.replace }}"
+  with_items:
+    - { regexp: 'ServerTokens OS', replace: 'ServerTokens Prod' }
+    - { regexp: 'ServerSignature On', replace: 'ServerSignature Off' }
+  notify:
+    - restart apache2  
+
+- name: Remove default VirtualHost
+  file:
+    path: /etc/apache2/sites-enabled/000-default.conf
+    state: absent
+  notify:
+  - restart apache2  
+
+- name: Add VirtualHost
+  template:
+    src: "{{ vhostName }}.conf.j2"
+    dest: /etc/apache2/sites-available/{{ vhostName }}.conf
+  notify:
+  - restart apache2  
+
+- name: Enable VirtualHost {{ vhostName }}
+  command: a2ensite {{ vhostName }}
+  args:
+    creates: /etc/apache2/sites-enabled/{{ vhostName }}.conf
+  notify:
+  - restart apache2
+
+- name: Copy phpinfo file
+  copy:
+    src: "phpinfo.php"
+    dest: /var/www/html/phpinfo.php

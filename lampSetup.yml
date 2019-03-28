@@ -1,0 +1,17 @@
+---
+- hosts: webserver01
+  roles:
+     - common
+     - lampserver
+
+  # déclaration de la variables globales
+  vars:
+    email: email@domain.fr
+    http_port: 80
+    domain: tomzone.fr
+    vhostName: tomzone.fr
+    
+  # ici, on demande directement à l'exécution de renseigner une variable
+  vars_prompt:
+    - name: "mysqlRootPassword"
+      prompt: "Enter your MySQL root Password"

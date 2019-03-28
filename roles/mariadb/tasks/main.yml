@@ -1,0 +1,10 @@
+---
+- name: Define MariaDB root password
+  shell: "{{ item }}"
+  with_items:
+    - "echo mysql-server mysql-server/root_password password {{ mysqlRootPassword }} | debconf-set-selections"
+    - "echo mysql-server mysql-server/root_password_again password {{ mysqlRootPassword }} | debconf-set-selections"
+
+- name: Install MariaDB Server
+  apt:
+    name: mariadb-server
