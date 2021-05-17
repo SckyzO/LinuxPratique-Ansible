@@ -11,9 +11,6 @@
     - htop
     - vim
     - man 
-    - manpages-fr 
-    - manpages-fr-extra 
-    - manpages-fr-dev 
     - bash-completion 
     - locales 
     - python-pip 
